@@ -1,0 +1,9 @@
+stages:
+  - verify
+
+verify:
+  stage: verify
+  image: alpine:3.20
+  script:
+    - echo "CI is configured"
+    - echo "Build and test steps will be added later"
