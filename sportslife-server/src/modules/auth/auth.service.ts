@@ -35,6 +35,7 @@ export const login = async (payload: LoginInput) => {
       id: user._id,
       email: user.email,
       role: user.role,
+      username: user.username,
     },
   };
 };

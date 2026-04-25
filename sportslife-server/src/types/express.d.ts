@@ -8,6 +8,7 @@ declare global {
       user?: {
         userId: Types.ObjectId | string;
         role: UserRole;
+        username?: string;
       };
     }
   }
