@@ -7,7 +7,8 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "seed": "ts-node-dev --transpile-only --exit-child src/scripts/seed.ts"
   },
   "keywords": [],
   "author": "",
