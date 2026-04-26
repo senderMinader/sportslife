@@ -11,6 +11,10 @@ import { countMatchesByTournament, createBracketMatches } from '../matches/match
 import { generateSingleEliminationBracket } from '../../core/bracket/bracket.service';
 import { ParticipantModel } from '../participants/participant.model';
 
+const isPowerOfTwo = (value: number): boolean => {
+  return value > 0 && (value & (value - 1)) === 0;
+};
+
 export const createTournament = async (payload: CreateTournamentInput, createdBy: string) => {
   return TournamentModel.create({
     ...payload,
@@ -97,6 +101,10 @@ export const startTournament = async (id: string) => {
 
   if (participants.length < 4) {
     throw new Error('A tournament requires at least 4 participants to start');
+  }
+
+  if (!isPowerOfTwo(participants.length)) {
+    throw new Error('A tournament can only start with a participant count equal to a power of 2');
   }
 
   const matchesCount = await countMatchesByTournament(tournament._id);

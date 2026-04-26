@@ -8,10 +8,6 @@ import {
   PropagationPatch,
 } from './bracket.types';
 
-const getNextPowerOfTwo = (value: number): number => {
-  return 2 ** Math.ceil(Math.log2(value));
-};
-
 const sortParticipantsForBracket = (participants: BracketParticipant[]): BracketParticipant[] => {
   return [...participants].sort((a, b) => {
     const seedA = a.seed ?? Number.MAX_SAFE_INTEGER;
@@ -28,11 +24,21 @@ const sortParticipantsForBracket = (participants: BracketParticipant[]): Bracket
   });
 };
 
-const buildFirstRoundSlots = (participants: BracketParticipant[]): Array<Types.ObjectId | null> => {
-  const bracketSize = getNextPowerOfTwo(participants.length);
-  const sorted = sortParticipantsForBracket(participants);
+const buildSeedPositions = (bracketSize: number): number[] => {
+  if (bracketSize === 1) {
+    return [1];
+  }
 
-  return Array.from({ length: bracketSize }, (_, index) => sorted[index]?._id ?? null);
+  const previous = buildSeedPositions(bracketSize / 2);
+
+  return previous.flatMap((seed) => [seed, bracketSize + 1 - seed]);
+};
+
+const buildFirstRoundSlots = (participants: BracketParticipant[]): Array<Types.ObjectId | null> => {
+  const sorted = sortParticipantsForBracket(participants);
+  const seedPositions = buildSeedPositions(participants.length);
+
+  return seedPositions.map((seedPosition) => sorted[seedPosition - 1]?._id ?? null);
 };
 
 export const generateSingleEliminationBracket = (

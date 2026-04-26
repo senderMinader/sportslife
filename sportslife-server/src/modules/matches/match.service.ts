@@ -1,12 +1,23 @@
 import { Types } from 'mongoose';
-import { MatchStatus } from '../../common/enums/match-status.enum';
-import { MatchModel } from './match.model';
-import { UpdateMatchResultInput } from './match.validation';
-import { BracketMatchInput } from '../../core/bracket/bracket.types';
+
 import {
   buildWinnerPropagationPatch,
   resolveNextMatchStatus,
 } from '../../core/bracket/bracket.service';
+import { BracketMatchInput } from '../../core/bracket/bracket.types';
+import { MatchStatus } from '../../common/enums/match-status.enum';
+import { MatchModel } from './match.model';
+import { UpdateMatchResultInput } from './match.validation';
+
+const toObjectIdOrNull = (
+  value: string | Types.ObjectId | null | undefined,
+): Types.ObjectId | null => {
+  if (!value) {
+    return null;
+  }
+
+  return value instanceof Types.ObjectId ? value : new Types.ObjectId(value);
+};
 
 export const getMatchesByTournament = async (tournamentId: string) => {
   return MatchModel.find({ tournamentId })
@@ -101,11 +112,11 @@ export const updateMatchResult = async (id: string, payload: UpdateMatchResultIn
     }
 
     if (patch.participant1Id !== undefined) {
-      nextMatch.participant1Id = patch.participant1Id;
+      nextMatch.participant1Id = toObjectIdOrNull(patch.participant1Id);
     }
 
     if (patch.participant2Id !== undefined) {
-      nextMatch.participant2Id = patch.participant2Id;
+      nextMatch.participant2Id = toObjectIdOrNull(patch.participant2Id);
     }
 
     nextMatch.status = resolveNextMatchStatus(nextMatch.participant1Id, nextMatch.participant2Id);

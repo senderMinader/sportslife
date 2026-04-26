@@ -21,6 +21,7 @@ const KNOWN_BAD_REQUEST_MESSAGES = new Set([
   'A tournament requires at least 4 participants to start',
   'Tournament matches have already been generated',
   'Next match not found',
+  'A tournament can only start with a participant count equal to a power of 2',
 ]);
 
 export const errorMiddleware = (

@@ -38,14 +38,15 @@ type MatchResultForm = FormGroup<{
         <div class="actions">
           <a routerLink="/tournaments">Retour</a>
 
-          <button
-            type="button"
-            *ngIf="tournament.status === 'draft'"
-            (click)="startTournament()"
-            [disabled]="startLoading()"
-          >
-            {{ startLoading() ? 'Lancement...' : 'Lancer le tournoi' }}
-          </button>
+          <div *ngIf="tournament.status === 'draft'" class="start-block">
+            <button type="button" (click)="startTournament()" [disabled]="!canStartTournament()">
+              {{ startLoading() ? 'Lancement...' : 'Lancer le tournoi' }}
+            </button>
+
+            <p class="hint" *ngIf="startValidationMessage()">
+              {{ startValidationMessage() }}
+            </p>
+          </div>
         </div>
       </header>
 
@@ -251,6 +252,32 @@ export class TournamentDetailPageComponent implements OnInit {
         round,
         matches: matches.sort((a, b) => a.matchNumber - b.matchNumber),
       }));
+  });
+
+  readonly startValidationMessage = computed(() => {
+    const tournament = this.tournament();
+    const participants = this.participants();
+
+    if (!tournament || tournament.status !== 'draft') {
+      return null;
+    }
+
+    if (participants.length < 4) {
+      return 'Minimum 4 participants requis pour lancer le tournoi.';
+    }
+
+    return null;
+  });
+
+  readonly canStartTournament = computed(() => {
+    const tournament = this.tournament();
+
+    return Boolean(
+      tournament &&
+      tournament.status === 'draft' &&
+      !this.startValidationMessage() &&
+      !this.startLoading(),
+    );
   });
 
   constructor(
