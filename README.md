@@ -65,20 +65,22 @@ Langage utilisé : Javascript + NodeJS + expressJS, rédigé en typescript
 Le backend suit une architecture modulaire et en couches :
 
 Modules par domaine métier :
-auth
-users
-tournaments
-participants
+auth;
+users;
+tournaments;
+participants;
 matches
 
-Organisation interne de chaque module :
+### Organisation interne de chaque module :
+
 controller → gestion des requêtes HTTP;
 service → logique métier;
 model → interaction avec la base de données;
 routes → définition des endpoints;
 validation → validation des données
 
-Dossiers transverses :
+### Dossiers transverses :
+
 middlewares → gestion des erreurs, authentification, etc.
 config → configuration (env, base de données)
 common → constantes, enums, utilitaires
@@ -86,8 +88,8 @@ core → logique métier isolée (ex : gestion des brackets)
 
 ## Cette organisation permet :
 
-une séparation claire des responsabilités
-une meilleure maintenabilité
+une séparation claire des responsabilités;
+une meilleure maintenabilité;
 une scalabilité facilitée
 
 ## 🧱 Architecture du projet
@@ -102,11 +104,11 @@ Notre Angular suit une architecture feature-based avec un noyau partagé, pensé
 
 On a découpé l’application en 3 zones :
 
-core/ : tout ce qui est global à l’application
+core/ : tout ce qui est global à l’application;
 
-features/ : les écrans et cas d’usage métier
+features/ : les écrans et cas d’usage métier;
 
-shared/ : ce qui peut être réutilisé visuellement ou fonctionnellement
+shared/ : ce qui peut être réutilisé visuellement ou fonctionnellement;
 
 #### core/
 
@@ -114,42 +116,37 @@ C’est le socle applicatif. On y met ce qui ne dépend pas d’une page précis
 
 Typiquement :
 
-services/
+### services/
+
 auth.service
 tournament.service
 participant.service
 match.service
-interceptors/
+
+### interceptors/
+
 ajout automatique du JWT
-guards/
+
+### guards/
+
 protection des routes privées
-models/
+
+### models/
+
 interfaces TypeScript des données API
-
-Rôle :
-
-centraliser les échanges backend
-gérer l’authentification
-porter les contrats de données
 
 ### features/
 
 C’est le cœur fonctionnel du frontend. Chaque feature correspond à un domaine métier ou à un parcours utilisateur.
 
-Exemples :
+### Exemples :
 
-features/auth
-page de login
-features/tournaments
-liste des tournois
-création tournoi
-détail tournoi
-Rôle :
-
-contenir les pages
-assembler les services du core
-gérer les interactions utilisateur
-C’est là qu’on code le comportement visible.
+features/auth:
+page de login;
+features/tournaments:
+liste des tournois;
+création tournoi;
+détail tournoi;
 
 ### shared/
 
@@ -157,48 +154,37 @@ C’est la zone des briques réutilisables.
 
 On peut y mettre plus tard :
 
-composants UI communs
-badges de statut
-cartes tournoi
-composants de liste de matchs
-pipes ou helpers visuels
-Pour l’instant, comme on avance vite, cette zone peut rester légère.
+composants UI communs;
+badges de statut;
+cartes tournoi;
+composants de liste de matchs;
+pipes ou helpers visuels;
 
 ### Routing
 
-Le routing est centralisé dans :
+Le routing est centralisé dans : app.routes.ts;
 
-app.routes.ts
 Il définit :
 
-les pages publiques comme /login
-les pages protégées comme /tournaments
-les redirections
+les pages publiques comme /login;
+les pages protégées comme /tournaments;
+les redirections;
 Le authGuard contrôle l’accès aux pages privées.
-
-### App config
-
-app.config.ts configure globalement l’application :
-
-router
-HttpClient
-interceptor JWT
-Donc toute requête part déjà avec le bon contexte.
 
 ### Flux de données
 
 Le flux est simple et propre :
 
-une page dans features/ déclenche une action
-elle appelle un service dans core/services
-le service appelle l’API backend
-la réponse est typée via core/models
+une page dans features/ déclenche une action;
+elle appelle un service dans core/services;
+le service appelle l’API backend;
+la réponse est typée via core/models;
 la page met à jour son état et l’affichage
 
 ### Fonctionnalités principales :
 
-Consultation des tournois
-Visualisation des brackets
-Suivi des matchs et résultats
-Authentification des utilisateurs
+Consultation des tournois;
+Visualisation des brackets;
+Suivi des matchs et résultats;
+Authentification des utilisateurs;
 Administration des tournois (réservée aux utilisateurs connectés)
