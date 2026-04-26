@@ -61,6 +61,7 @@ npm run dev
 
 ### Backend
 
+Langage utilisé : Javascript + NodeJS + expressJS, rédigé en typescript
 Le backend suit une architecture modulaire et en couches :
 
 Modules par domaine métier :
