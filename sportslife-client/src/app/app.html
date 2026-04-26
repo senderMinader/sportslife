@@ -2,7 +2,7 @@
   <div class="top-rainbow-bar"></div>
 
     <header class="app-topbar">
-      <a routerLink="/tournaments" class="brand">
+      <a href="/tournaments" class="brand">
         <!-- <span class="brand-mark"></span>
         <span>SPORTSLIFE</span> -->
         <svg width="300" height="68" viewBox="0 0 300 68" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -17,12 +17,12 @@
 
       <div class="topbar-actions">
         @if (authService.isAuthenticated()) {
-          <a routerLink="/tournaments/create" class="btn-primary">Créer un tournoi</a>
+          <button type="button" [routerLink]="['/tournaments', 'create']" class="btn-primary">Créer un tournoi</button>
           <button type="button" class="btn-secondary" (click)="logout()">
             Déconnexion
           </button>
         } @else {
-          <a routerLink="/login" class="btn-primary">Connexion admin</a>
+          <button type="button" [routerLink]="['/login']" class="btn-primary"> Connexion administrateur </button>
         }
       </div>
     </header>

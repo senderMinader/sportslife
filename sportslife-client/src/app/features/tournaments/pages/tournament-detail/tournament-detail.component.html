@@ -6,10 +6,10 @@
         <h1>{{ tournament.name }}</h1>
         <div class="page-header__meta">
           <span class="status-chip" [attr.data-status]="tournament.status">
-            {{ tournament.status }}
+            {{ tournament.status | tournamentStatus }}
           </span>
           <span>{{ tournament.participantsCount }} participants</span>
-          <span>{{ tournament.type }}</span>
+          <span>{{ tournament.type | tournamentType }}</span>
         </div>
       </div>
 

@@ -67,7 +67,7 @@
                 </div>
 
                 @if (match.winnerId) {
-                  <p class="winner-note">Winner: {{ match.winnerId.name }}</p>
+                  <p class="winner-note">Gagnant: {{ match.winnerId.name }}</p>
                 }
 
                 @if (canManageTournament && canEditMatch(match)) {
@@ -78,7 +78,7 @@
                   >
                     <input type="number" formControlName="score1" placeholder="P1" />
                     <input type="number" formControlName="score2" placeholder="P2" />
-                    <button type="submit" class="btn-primary">Save</button>
+                    <button type="submit" class="btn-primary">Valider</button>
                   </form>
                 }
 
@@ -88,7 +88,7 @@
                     class="btn-secondary match-card__cancel"
                     (click)="onCancel(match._id)"
                   >
-                    Cancel match
+                    Annuler le match
                   </button>
                 }
               </article>

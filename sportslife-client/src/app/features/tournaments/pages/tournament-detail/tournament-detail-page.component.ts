@@ -20,6 +20,8 @@ import {
   BracketRoundLabel,
   BracketRoundView,
 } from '../../components/bracket-board/bracket-board.component';
+import { TournamentStatusPipe } from '../../../../shared/pipes/tournament-status.pipe';
+import { TournamentTypePipe } from '../../../../shared/pipes/tournament-type.pipe';
 
 type MatchResultForm = FormGroup<{
   score1: FormControl<number>;
@@ -29,7 +31,13 @@ type MatchResultForm = FormGroup<{
 @Component({
   selector: 'app-tournament-detail-page',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterModule, BracketBoardComponent],
+  imports: [
+    ReactiveFormsModule,
+    RouterModule,
+    BracketBoardComponent,
+    TournamentStatusPipe,
+    TournamentTypePipe,
+  ],
   templateUrl: './tournament-detail.component.html',
   styleUrl: './tournament-detail.component.scss',
 })
