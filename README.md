@@ -72,10 +72,10 @@ participants
 matches
 
 Organisation interne de chaque module :
-controller → gestion des requêtes HTTP
-service → logique métier
-model → interaction avec la base de données
-routes → définition des endpoints
+controller → gestion des requêtes HTTP;
+service → logique métier;
+model → interaction avec la base de données;
+routes → définition des endpoints;
 validation → validation des données
 
 Dossiers transverses :
