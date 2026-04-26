@@ -20,3 +20,14 @@ export interface TournamentListResponse {
     totalPages: number;
   };
 }
+
+export enum TournamentStatus {
+  DRAFT = 'draft',
+  STARTED = 'started',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled',
+}
+
+export enum TournamentType {
+  SINGLE_ELIMINATION = 'single_elimination',
+}

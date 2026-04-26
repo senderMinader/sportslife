@@ -14,7 +14,7 @@
     <!-- Colonne Type -->
     <ng-container matColumnDef="type">
       <th mat-header-cell *matHeaderCellDef>Type</th>
-      <td mat-cell *matCellDef="let row">{{ row.type }}</td>
+      <td mat-cell *matCellDef="let row">{{ row.type |tournamentType}}</td>
     </ng-container>
 
     <!-- Colonne Status -->
@@ -22,7 +22,7 @@
       <th mat-header-cell *matHeaderCellDef>Statut</th>
       <td mat-cell *matCellDef="let row">
         <span [attr.data-status]="row.status" class="status-chip">
-          {{ row.status }}
+          {{ row.status |tournamentStatus}}
         </span>
       </td>
     </ng-container>

@@ -7,6 +7,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatChipsModule } from '@angular/material/chips';
 
 import type { Tournament } from '../../../../core/models/tournament.model';
+import { TournamentStatusPipe } from '../../../../shared/pipes/tournament-status.pipe';
+import { TournamentTypePipe } from '../../../../shared/pipes/tournament-type.pipe';
 
 @Component({
   selector: 'app-tournament-table',
@@ -18,6 +20,8 @@ import type { Tournament } from '../../../../core/models/tournament.model';
     MatPaginatorModule,
     MatProgressBarModule,
     MatChipsModule,
+    TournamentStatusPipe,
+    TournamentTypePipe,
   ],
   templateUrl: './tournament-table.component.html',
   styleUrl: './tournament-table.component.scss',
