@@ -15,6 +15,11 @@ import { MatchService } from '../../../../core/services/match.service';
 import { ParticipantService } from '../../../../core/services/participant.service';
 import { TournamentService } from '../../../../core/services/tournament.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import {
+  BracketBoardComponent,
+  BracketRoundLabel,
+  BracketRoundView,
+} from '../../components/bracket-board/bracket-board.component';
 
 type MatchResultForm = FormGroup<{
   score1: FormControl<number>;
@@ -24,7 +29,7 @@ type MatchResultForm = FormGroup<{
 @Component({
   selector: 'app-tournament-detail-page',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterModule],
+  imports: [ReactiveFormsModule, RouterModule, BracketBoardComponent],
   templateUrl: './tournament-detail.component.html',
   styleUrl: './tournament-detail.component.scss',
 })
@@ -43,7 +48,7 @@ export class TournamentDetailPageComponent implements OnInit {
 
   readonly participantForm: FormGroup;
 
-  readonly matchesByRound = computed(() => {
+  readonly matchesByRound = computed<BracketRoundView[]>(() => {
     const grouped = new Map<number, Match[]>();
 
     for (const match of this.matches()) {
@@ -58,6 +63,45 @@ export class TournamentDetailPageComponent implements OnInit {
         round,
         matches: matches.sort((a, b) => a.matchNumber - b.matchNumber),
       }));
+  });
+
+  readonly roundLabels = computed<BracketRoundLabel[]>(() => {
+    const rounds = this.matchesByRound();
+    const totalRounds = rounds.length;
+
+    return rounds.map((round) => {
+      let label = `Round ${round.round}`;
+
+      if (totalRounds === 2) {
+        label = round.round === 1 ? 'Demi-finales' : 'Finale';
+      }
+
+      if (totalRounds === 3) {
+        if (round.round === 1) {
+          label = 'Quart de finale';
+        } else if (round.round === 2) {
+          label = 'Demi-finales';
+        } else {
+          label = 'Finale';
+        }
+      }
+
+      if (totalRounds >= 4) {
+        if (round.round === totalRounds) {
+          label = 'Finale';
+        } else if (round.round === totalRounds - 1) {
+          label = 'Demi-finales';
+        } else if (round.round === totalRounds - 2) {
+          label = 'Quart de finale';
+        }
+      }
+
+      return {
+        round: round.round,
+        label,
+        matchesCount: round.matches.length,
+      };
+    });
   });
 
   readonly startValidationMessage = computed(() => {
@@ -250,5 +294,22 @@ export class TournamentDetailPageComponent implements OnInit {
 
   canCancelMatch(match: Match): boolean {
     return match.status === 'pending' || match.status === 'ready';
+  }
+
+  getStatusLabel(status: string): string {
+    switch (status) {
+      case 'ready':
+        return 'Prêt';
+      case 'completed':
+        return 'Terminé';
+      case 'pending':
+        return 'En attente';
+      case 'cancelled':
+        return 'Annulé';
+      case 'in_progress':
+        return 'En cours';
+      default:
+        return status;
+    }
   }
 }

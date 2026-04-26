@@ -1,13 +1,37 @@
+:host {
+  display: block;
+}
+
 .page {
-  padding: 24px;
+  padding: 12px;
+  display: grid;
+  gap: 16px;
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
-  margin-bottom: 24px;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: var(--shadow-sm);
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 1.45rem;
+  line-height: 1.05;
+}
+
+.page-header__meta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  color: var(--text-muted);
 }
 
 .actions {
@@ -16,74 +40,86 @@
   align-items: center;
 }
 
+.start-block {
+  display: grid;
+  gap: 8px;
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--danger);
+  max-width: 260px;
+}
+
+.public-note {
+  margin: 0;
+  color: var(--text-muted);
+}
+
 .grid {
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 24px;
+  grid-template-columns: 3fr 5fr;
+  gap: 18px;
+  align-items: start;
 }
 
 .card {
-  padding: 20px;
-  border: 1px solid #d0d5dd;
-  border-radius: 12px;
-  background: white;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: var(--shadow-sm);
+}
+
+.inline-form {
+  display: grid;
+  grid-template-columns: 1.6fr 0.8fr auto;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.inline-form input,
+.inline-form button {
+  min-width: 0;
 }
 
 .list {
   display: grid;
-  gap: 10px;
+  gap: 6px;
 }
 
 .row {
   display: flex;
   justify-content: space-between;
-  gap: 16px;
+  gap: 10px;
   padding: 10px 0;
-  border-bottom: 1px solid #eaecf0;
-}
-
-.rounds {
-  display: grid;
-  gap: 20px;
-}
-
-.round {
-  display: grid;
-  gap: 12px;
-}
-
-.match-card {
-  border: 1px solid #eaecf0;
-  border-radius: 10px;
-  padding: 14px;
-  display: grid;
-  gap: 12px;
-}
-
-.match-header,
-.players,
-.scores,
-.inline-form {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-input,
-button {
-  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
 }
 
 .error {
-  color: #b42318;
-  margin: 12px 0;
+  color: var(--danger);
+  margin: 0;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .grid {
     grid-template-columns: 1fr;
   }
 }
-  
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .inline-form {
+    grid-template-columns: 1fr;
+  }
+}

@@ -106,30 +106,33 @@ a {
   min-height: 100vh;
 }
 
-.page-wrap {
-  width: min(1380px, calc(100% - 32px));
-  margin: 18px auto;
-  background: var(--surface);
-  backdrop-filter: blur(18px);
-  border: 1px solid var(--border);
-  border-radius: 30px;
-  box-shadow: var(--shadow-lg);
-  overflow: hidden;
-}
-
 .top-rainbow-bar {
   height: 8px;
   background: var(--gradient-rainbow);
 }
 
 .app-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: min(1440px, calc(100% - 32px));
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 20px;
-  padding: 20px 28px;
-  background: rgba(255, 255, 255, 0.72);
-  border-bottom: 1px solid var(--border);
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-top: 0;
+  border-radius: 0 0 24px 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.app-main {
+  width: min(1440px, calc(100% - 32px));
+  margin: 18px auto 32px;
 }
 
 .brand {
@@ -205,4 +208,27 @@ a {
 .status-chip[data-status='cancelled'] {
   background: #fef2f2;
   color: #b91c1c;
+}
+
+@media (max-width: 768px) {
+  .app-topbar {
+    width: calc(100% - 20px);
+    padding: 14px 16px;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .app-main {
+    width: calc(100% - 20px);
+    margin-top: 14px;
+  }
+
+  .brand {
+    font-size: 1.2rem;
+  }
+
+  .topbar-actions {
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
 }

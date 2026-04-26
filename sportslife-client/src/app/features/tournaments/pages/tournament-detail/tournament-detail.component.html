@@ -1,34 +1,39 @@
 `
     @if (tournament(); as tournament) {
       <section class="page">
-        <header class="page-header">
-          <div>
-            <h1>{{ tournament.name }}</h1>
-            <p>{{ tournament.description || 'Aucune description' }}</p>
-            <p>Statut: {{ tournament.status }}</p>
-            <p>Participants: {{ tournament.participantsCount }}</p>
-          </div>
+    <header class="page-header">
+      <div>
+        <h1>{{ tournament.name }}</h1>
+        <div class="page-header__meta">
+          <span class="status-chip" [attr.data-status]="tournament.status">
+            {{ tournament.status }}
+          </span>
+          <span>{{ tournament.participantsCount }} participants</span>
+          <span>{{ tournament.type }}</span>
+        </div>
+      </div>
 
-          <div class="actions">
-            <a routerLink="/tournaments">Retour</a>
+      <div class="actions">
+        <a routerLink="/tournaments" class="btn-secondary">Retour</a>
 
-            @if (tournament.status === 'draft' && canManageTournament()) {
-              <div class="start-block">
-                <button
-                  type="button"
-                  (click)="startTournament()"
-                  [disabled]="!canStartTournament()"
-                >
-                  {{ startLoading() ? 'Lancement...' : 'Lancer le tournoi' }}
-                </button>
+        @if (tournament.status === 'draft' && canManageTournament()) {
+          <div class="start-block">
+            <button
+              type="button"
+              class="btn-primary"
+              (click)="startTournament()"
+              [disabled]="!canStartTournament()"
+            >
+              {{ startLoading() ? 'Lancement...' : 'Lancer le tournoi' }}
+            </button>
 
-                @if (startValidationMessage()) {
-                  <p class="hint">{{ startValidationMessage() }}</p>
-                }
-              </div>
+            @if (startValidationMessage()) {
+              <p class="hint">{{ startValidationMessage() }}</p>
             }
           </div>
-        </header>
+        }
+      </div>
+    </header>
 
         @if (pageError()) {
           <p class="error">{{ pageError() }}</p>
@@ -64,7 +69,7 @@
             </div>
           </section>
 
-          <section class="card">
+          <!-- <section class="card">
             <h2>Matchs</h2>
 
             @if (matches().length === 0) {
@@ -120,7 +125,20 @@
                 }
               </div>
             }
-          </section>
+          </section> -->
+
+          <app-bracket-board
+            [matches]="matches()"
+            [matchesByRound]="matchesByRound()"
+            [roundLabels]="roundLabels()"
+            [canManageTournament]="canManageTournament()"
+            [getStatusLabel]="getStatusLabel.bind(this)"
+            [canEditMatch]="canEditMatch.bind(this)"
+            [canCancelMatch]="canCancelMatch.bind(this)"
+            [getMatchForm]="getMatchForm.bind(this)"
+            (updateResult)="updateMatchResult($event)"
+            (cancel)="cancelMatch($event)"
+          />
         </div>
       </section>
     }
