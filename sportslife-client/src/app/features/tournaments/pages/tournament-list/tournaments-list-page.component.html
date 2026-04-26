@@ -1,0 +1,85 @@
+<section class="landing-page">
+      <section class="hero">
+        <div class="hero-copy">
+          <span class="hero-tag">Tournament management, visual brackets, live progression</span>
+          <h1>
+            Des tournois lisibles,
+            <span>modernes et pilotables</span>
+          </h1>
+          <p>
+            Consultez les tournois publics, explorez les brackets et suivez les matchs. Les actions
+            d’administration sont réservées aux utilisateurs connectés.
+          </p>
+
+          <div class="hero-actions">
+            <a routerLink="/tournaments" class="btn-primary">Explorer les tournois</a>
+            @if (!authService.isAuthenticated()) {
+              <a routerLink="/login" class="btn-secondary">Accès admin</a>
+            } @else {
+              <a routerLink="/tournaments/create" class="btn-secondary">Nouveau tournoi</a>
+            }
+          </div>
+        </div>
+
+        <div class="hero-panel">
+          <div class="hero-card hero-card--primary">
+            <span>Public</span>
+            <strong>Liste et détail accessibles</strong>
+          </div>
+          <div class="hero-card">
+            <span>Admin</span>
+            <strong>Création, score, lancement, annulation</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-head">
+        <div>
+          <h2>Tournois</h2>
+          <p>Liste paginée visible sans authentification.</p>
+        </div>
+      </section>
+
+      @if (loading()) {
+        <p>Chargement...</p>
+      }
+
+      @if (error()) {
+        <p class="error">{{ error() }}</p>
+      }
+
+      @if (!loading()) {
+        <div class="tournaments-grid">
+          @for (tournament of tournaments(); track tournament._id) {
+            <article class="tournament-card">
+              <div class="card-top">
+                <span class="status-chip" [attr.data-status]="tournament.status">
+                  {{ tournament.status }}
+                </span>
+                <span class="muted">{{ tournament.type }}</span>
+              </div>
+
+              <h3>{{ tournament.name }}</h3>
+              <p>{{ tournament.description || 'Aucune description disponible.' }}</p>
+
+              <div class="card-meta">
+                <span>{{ tournament.participantsCount }} participants</span>
+                <span>
+                  {{
+                    tournament.startedAt
+                      ? 'Démarré' + ' · ' + (tournament.startedAt | date: 'dd/MM/yyyy')
+                      : 'En attente'
+                  }}
+                </span>
+              </div>
+
+              <a [routerLink]="['/tournaments', tournament._id]" class="btn-secondary inline-link">
+                Voir le tournoi
+              </a>
+            </article>
+          } @empty {
+            <p>Aucun tournoi trouvé.</p>
+          }
+        </div>
+      }
+    </section>

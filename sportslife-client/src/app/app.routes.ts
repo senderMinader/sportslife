@@ -2,9 +2,9 @@ import { Routes } from '@angular/router';
 
 import { authGuard } from './core/guards/auth.guard';
 import { LoginPageComponent } from './features/auth/pages/login-page.component';
-import { TournamentsListPageComponent } from './features/tournaments/pages/tournaments-list-page.component';
-import { TournamentCreatePageComponent } from './features/tournaments/pages/tournament-create-page.component';
-import { TournamentDetailPageComponent } from './features/tournaments/pages/tournament-detail-page.component';
+import { TournamentsListPageComponent } from './features/tournaments/pages/tournament-list/tournaments-list-page.component';
+import { TournamentCreatePageComponent } from './features/tournaments/pages/tournament-create-page/tournament-create-page.component';
+import { TournamentDetailPageComponent } from './features/tournaments/pages/tournament-detail/tournament-detail-page.component';
 
 export const routes: Routes = [
   {
@@ -24,13 +24,13 @@ export const routes: Routes = [
         component: TournamentsListPageComponent,
       },
       {
-        path: ':id',
-        component: TournamentDetailPageComponent,
-      },
-      {
         path: 'create',
         canActivate: [authGuard],
         component: TournamentCreatePageComponent,
+      },
+      {
+        path: ':id',
+        component: TournamentDetailPageComponent,
       },
     ],
   },
