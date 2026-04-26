@@ -1,14 +1,14 @@
 <section class="landing-page">
       <section class="hero">
         <div class="hero-copy">
-          <span class="hero-tag">Tournament management, visual brackets, live progression</span>
+          <span class="hero-tag">Gestion des tournois, visualisation des résultats, scores en direct</span>
           <h1>
-            Des tournois lisibles,
-            <span>modernes et pilotables</span>
+            Organisez, suivez et maîtrisez
+            <span>vos tournois en toute simplicité</span>
           </h1>
           <p>
-            Consultez les tournois publics, explorez les brackets et suivez les matchs. Les actions
-            d’administration sont réservées aux utilisateurs connectés.
+            Parcourez les tournois disponibles, analysez les brackets et suivez chaque match en temps réel.
+            Accédez aux fonctionnalités d’administration en vous connectant.
           </p>
 
           <div class="hero-actions">
@@ -20,23 +20,12 @@
             }
           </div>
         </div>
-
-        <div class="hero-panel">
-          <div class="hero-card hero-card--primary">
-            <span>Public</span>
-            <strong>Liste et détail accessibles</strong>
-          </div>
-          <div class="hero-card">
-            <span>Admin</span>
-            <strong>Création, score, lancement, annulation</strong>
-          </div>
-        </div>
       </section>
 
       <section class="section-head">
         <div>
           <h2>Tournois</h2>
-          <p>Liste paginée visible sans authentification.</p>
+          <p>Les tournois disponibles actuellement.</p>
         </div>
       </section>
 
@@ -48,38 +37,12 @@
         <p class="error">{{ error() }}</p>
       }
 
-      @if (!loading()) {
-        <div class="tournaments-grid">
-          @for (tournament of tournaments(); track tournament._id) {
-            <article class="tournament-card">
-              <div class="card-top">
-                <span class="status-chip" [attr.data-status]="tournament.status">
-                  {{ tournament.status }}
-                </span>
-                <span class="muted">{{ tournament.type }}</span>
-              </div>
-
-              <h3>{{ tournament.name }}</h3>
-              <p>{{ tournament.description || 'Aucune description disponible.' }}</p>
-
-              <div class="card-meta">
-                <span>{{ tournament.participantsCount }} participants</span>
-                <span>
-                  {{
-                    tournament.startedAt
-                      ? 'Démarré' + ' · ' + (tournament.startedAt | date: 'dd/MM/yyyy')
-                      : 'En attente'
-                  }}
-                </span>
-              </div>
-
-              <a [routerLink]="['/tournaments', tournament._id]" class="btn-secondary inline-link">
-                Voir le tournoi
-              </a>
-            </article>
-          } @empty {
-            <p>Aucun tournoi trouvé.</p>
-          }
-        </div>
-      }
+      <app-tournament-table
+        [tournaments]="tournaments()"
+        [loading]="loading()"
+        [totalItems]="totalItems()"
+        [pageIndex]="pageIndex()"
+        [pageSize]="pageSize()"
+        (pageChange)="onPageChange($event)"
+      />
     </section>
