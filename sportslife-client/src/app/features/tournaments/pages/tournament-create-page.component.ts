@@ -44,7 +44,9 @@ import { TournamentService } from '../../../core/services/tournament.service';
           </button>
         </form>
 
-        <p class="error" *ngIf="error()">{{ error() }}</p>
+        @if (error()) {
+          <p class="error">{{ error() }}</p>
+        }
       </div>
     </section>
   `,

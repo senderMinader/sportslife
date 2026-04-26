@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, signal } from '@angular/core';
 import {
   FormBuilder,
@@ -15,6 +14,7 @@ import { Tournament } from '../../../core/models/tournament.model';
 import { MatchService } from '../../../core/services/match.service';
 import { ParticipantService } from '../../../core/services/participant.service';
 import { TournamentService } from '../../../core/services/tournament.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 type MatchResultForm = FormGroup<{
   score1: FormControl<number>;
@@ -24,110 +24,133 @@ type MatchResultForm = FormGroup<{
 @Component({
   selector: 'app-tournament-detail-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [ReactiveFormsModule, RouterModule],
   template: `
-    <section class="page" *ngIf="tournament() as tournament">
-      <header class="page-header">
-        <div>
-          <h1>{{ tournament.name }}</h1>
-          <p>{{ tournament.description || 'Aucune description' }}</p>
-          <p>Statut: {{ tournament.status }}</p>
-          <p>Participants: {{ tournament.participantsCount }}</p>
-        </div>
-
-        <div class="actions">
-          <a routerLink="/tournaments">Retour</a>
-
-          <div *ngIf="tournament.status === 'draft'" class="start-block">
-            <button type="button" (click)="startTournament()" [disabled]="!canStartTournament()">
-              {{ startLoading() ? 'Lancement...' : 'Lancer le tournoi' }}
-            </button>
-
-            <p class="hint" *ngIf="startValidationMessage()">
-              {{ startValidationMessage() }}
-            </p>
+    @if (tournament(); as tournament) {
+      <section class="page">
+        <header class="page-header">
+          <div>
+            <h1>{{ tournament.name }}</h1>
+            <p>{{ tournament.description || 'Aucune description' }}</p>
+            <p>Statut: {{ tournament.status }}</p>
+            <p>Participants: {{ tournament.participantsCount }}</p>
           </div>
-        </div>
-      </header>
 
-      <p class="error" *ngIf="pageError()">{{ pageError() }}</p>
+          <div class="actions">
+            <a routerLink="/tournaments">Retour</a>
 
-      <div class="grid">
-        <section class="card">
-          <h2>Participants</h2>
-
-          <form
-            [formGroup]="participantForm"
-            (ngSubmit)="addParticipant()"
-            *ngIf="tournament.status === 'draft'"
-            class="inline-form"
-          >
-            <input type="text" formControlName="name" placeholder="Nom du participant" />
-            <input type="number" formControlName="seed" placeholder="Seed" />
-            <button type="submit" [disabled]="participantLoading() || participantForm.invalid">
-              Ajouter
-            </button>
-          </form>
-
-          <p class="error" *ngIf="participantError()">{{ participantError() }}</p>
-
-          <div class="list">
-            <article class="row" *ngFor="let participant of participants()">
-              <span>{{ participant.name }}</span>
-              <span>Seed: {{ participant.seed ?? '-' }}</span>
-            </article>
-          </div>
-        </section>
-
-        <section class="card">
-          <h2>Matchs</h2>
-
-          <p *ngIf="matches().length === 0">Aucun match généré pour le moment.</p>
-
-          <div class="rounds" *ngIf="matchesByRound().length > 0">
-            <section class="round" *ngFor="let round of matchesByRound()">
-              <h3>Round {{ round.round }}</h3>
-
-              <article class="match-card" *ngFor="let match of round.matches">
-                <div class="match-header">
-                  <strong>Match {{ match.matchNumber }}</strong>
-                  <span>{{ match.status }}</span>
-                </div>
-
-                <div class="players">
-                  <div>{{ match.participant1Id?.name || 'TBD' }}</div>
-                  <div>{{ match.participant2Id?.name || 'TBD' }}</div>
-                </div>
-
-                <div class="scores">
-                  <span>Score: {{ match.score1 ?? '-' }} - {{ match.score2 ?? '-' }}</span>
-                  <span *ngIf="match.winnerId">Gagnant: {{ match.winnerId.name }}</span>
-                </div>
-
-                <form
-                  class="inline-form"
-                  *ngIf="canEditMatch(match)"
-                  [formGroup]="getMatchForm(match._id)"
-                  (ngSubmit)="updateMatchResult(match._id)"
-                >
-                  <input type="number" formControlName="score1" placeholder="Score 1" />
-                  <input type="number" formControlName="score2" placeholder="Score 2" />
-                  <button type="submit">Enregistrer</button>
-                </form>
-
+            @if (tournament.status === 'draft' && canManageTournament()) {
+              <div class="start-block">
                 <button
                   type="button"
-                  *ngIf="canCancelMatch(match)"
-                  (click)="cancelMatch(match._id)"
+                  (click)="startTournament()"
+                  [disabled]="!canStartTournament()"
                 >
-                  Annuler le match
+                  {{ startLoading() ? 'Lancement...' : 'Lancer le tournoi' }}
                 </button>
-              </article>
-            </section>
+
+                @if (startValidationMessage()) {
+                  <p class="hint">{{ startValidationMessage() }}</p>
+                }
+              </div>
+            }
           </div>
-        </section>
-      </div>
-    </section>
+        </header>
+
+        @if (pageError()) {
+          <p class="error">{{ pageError() }}</p>
+        }
+
+        <div class="grid">
+          <section class="card">
+            <h2>Participants</h2>
+
+            @if (tournament.status === 'draft' && canManageTournament()) {
+              <form [formGroup]="participantForm" (ngSubmit)="addParticipant()" class="inline-form">
+                <input type="text" formControlName="name" placeholder="Nom du participant" />
+                <input type="number" formControlName="seed" placeholder="Seed" />
+                <button type="submit" [disabled]="participantLoading() || participantForm.invalid">
+                  Ajouter
+                </button>
+              </form>
+            }
+
+            @if (participantError()) {
+              <p class="error">{{ participantError() }}</p>
+            }
+
+            <div class="list">
+              @for (participant of participants(); track participant._id) {
+                <article class="row">
+                  <span>{{ participant.name }}</span>
+                  <span>Seed: {{ participant.seed ?? '-' }}</span>
+                </article>
+              } @empty {
+                <p>Aucun participant.</p>
+              }
+            </div>
+          </section>
+
+          <section class="card">
+            <h2>Matchs</h2>
+
+            @if (matches().length === 0) {
+              <p>Aucun match généré pour le moment.</p>
+            }
+
+            @if (matchesByRound().length > 0) {
+              <div class="rounds">
+                @for (round of matchesByRound(); track round.round) {
+                  <section class="round">
+                    <h3>Round {{ round.round }}</h3>
+
+                    @for (match of round.matches; track match._id) {
+                      <article class="match-card" [attr.data-status]="match.status">
+                        <div class="match-header">
+                          <strong>Match {{ match.matchNumber }}</strong>
+                          <span>{{ match.status }}</span>
+                        </div>
+
+                        <div class="players">
+                          <div>{{ match.participant1Id?.name || 'TBD' }}</div>
+                          <div>{{ match.participant2Id?.name || 'TBD' }}</div>
+                        </div>
+
+                        <div class="scores">
+                          <span>Score: {{ match.score1 ?? '-' }} - {{ match.score2 ?? '-' }}</span>
+
+                          @if (match.winnerId) {
+                            <span>Gagnant: {{ match.winnerId.name }}</span>
+                          }
+                        </div>
+
+                        @if (canManageTournament() && canEditMatch(match)) {
+                          <form
+                            class="inline-form"
+                            [formGroup]="getMatchForm(match._id)"
+                            (ngSubmit)="updateMatchResult(match._id)"
+                          >
+                            <input type="number" formControlName="score1" placeholder="Score 1" />
+                            <input type="number" formControlName="score2" placeholder="Score 2" />
+                            <button type="submit">Enregistrer</button>
+                          </form>
+                        }
+
+                        @if (canManageTournament() && canCancelMatch(match)) {
+                          <button type="button" (click)="cancelMatch(match._id)">
+                            Annuler le match
+                          </button>
+                        }
+                      </article>
+                    }
+                  </section>
+                }
+              </div>
+            }
+          </section>
+        </div>
+      </section>
+    }
   `,
   styles: [
     `
@@ -280,12 +303,15 @@ export class TournamentDetailPageComponent implements OnInit {
     );
   });
 
+  readonly canManageTournament = computed(() => this.authService.isAuthenticated());
+
   constructor(
     private readonly route: ActivatedRoute,
     private readonly fb: FormBuilder,
     private readonly tournamentService: TournamentService,
     private readonly participantService: ParticipantService,
     private readonly matchService: MatchService,
+    public readonly authService: AuthService,
   ) {
     this.participantForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],

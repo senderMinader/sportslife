@@ -1,39 +1,208 @@
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
-@use '@angular/material' as mat;
+:root {
+  --bg: #f6f3fb;
+  --bg-muted: #f1edf8;
+  --surface: rgba(255, 255, 255, 0.82);
+  --surface-strong: #ffffff;
+  --surface-soft: #f8f7fc;
 
-html {
-  height: 100%;
-  @include mat.theme(
-    (
-      color: (
-        primary: mat.$rose-palette,
-        tertiary: mat.$red-palette,
-      ),
-      typography: Roboto,
-      density: 0,
-    )
+  --text: #111114;
+  --text-muted: #5f6170;
+  --text-soft: #7d8091;
+
+  --border: rgba(17, 17, 20, 0.08);
+  --border-strong: rgba(17, 17, 20, 0.14);
+
+  --primary: #7c3aed;
+  --primary-strong: #5b21b6;
+  --primary-soft: #ede9fe;
+
+  --accent-black: #111114;
+  --accent-lilac: #d9ccff;
+  --accent-violet: #8b5cf6;
+
+  --success: #16a34a;
+  --warning: #f59e0b;
+  --danger: #dc2626;
+  --info: #475467;
+
+  --shadow-sm: 0 6px 20px rgba(17, 17, 20, 0.06);
+  --shadow-md: 0 18px 40px rgba(17, 17, 20, 0.08);
+  --shadow-lg: 0 30px 60px rgba(17, 17, 20, 0.12);
+
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+
+  --gradient-rainbow: linear-gradient(
+    90deg,
+    #c7f0dd 0%,
+    #f6dfc8 25%,
+    #ead7ff 50%,
+    #dcd7ff 75%,
+    #fff3bf 100%
+  );
+
+  --gradient-violet: linear-gradient(
+    135deg,
+    #8b5cf6 0%,
+    #7c3aed 55%,
+    #5b21b6 100%
   );
 }
 
-body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
-  margin: 0;
-  height: 100%;
+* {
+  box-sizing: border-box;
 }
-/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(139, 92, 246, 0.08), transparent 24%),
+    radial-gradient(circle at top right, rgba(255, 214, 10, 0.09), transparent 20%),
+    linear-gradient(180deg, #fbfaff 0%, #f4f1fa 100%);
+  color: var(--text);
+}
+
+body {
+  min-height: 100vh;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.82rem 1.1rem;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    opacity 140ms ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.56;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.page-wrap {
+  width: min(1380px, calc(100% - 32px));
+  margin: 18px auto;
+  background: var(--surface);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.top-rainbow-bar {
+  height: 8px;
+  background: var(--gradient-rainbow);
+}
+
+.app-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 28px;
+  background: rgba(255, 255, 255, 0.72);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  font-size: 1.6rem;
+}
+
+.brand-mark {
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  background: var(--gradient-violet);
+  box-shadow: 0 10px 24px rgba(124, 58, 237, 0.35);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-primary {
+  background: var(--gradient-violet);
+  color: white;
+  box-shadow: 0 16px 30px rgba(124, 58, 237, 0.28);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  padding: 0.38rem 0.74rem;
+  font-size: 0.83rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+}
+
+.status-chip[data-status='draft'] {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.status-chip[data-status='started'],
+.status-chip[data-status='ready'] {
+  background: #fff7ed;
+  color: #b45309;
+}
+
+.status-chip[data-status='completed'] {
+  background: #ecfdf3;
+  color: #15803d;
+}
+
+.status-chip[data-status='cancelled'] {
+  background: #fef2f2;
+  color: #b91c1c;
+}

@@ -8,31 +8,31 @@ import { TournamentDetailPageComponent } from './features/tournaments/pages/tour
 
 export const routes: Routes = [
   {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'tournaments',
+  },
+  {
     path: 'login',
     component: LoginPageComponent,
   },
   {
     path: 'tournaments',
-    canActivate: [authGuard],
     children: [
       {
         path: '',
         component: TournamentsListPageComponent,
       },
       {
-        path: 'create',
-        component: TournamentCreatePageComponent,
-      },
-      {
         path: ':id',
         component: TournamentDetailPageComponent,
       },
+      {
+        path: 'create',
+        canActivate: [authGuard],
+        component: TournamentCreatePageComponent,
+      },
     ],
-  },
-  {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: 'tournaments',
   },
   {
     path: '**',
