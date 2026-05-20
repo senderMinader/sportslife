@@ -1,0 +1,50 @@
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--mat-table-row-item-outline-color, rgba(0,0,0,.12));
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: var(--shadow-sm);
+}
+
+.tournament-table {
+  width: 100%;
+}
+
+.tournament-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: var(--mat-table-hover-state-layer-color, rgba(0,0,0,.04));
+  }
+}
+
+.status-chip {
+  font-size: 0.75rem;
+
+  &[data-status='active'] {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  &[data-status='pending'] {
+    background-color: #fff8e1;
+    color: #f57f17;
+  }
+
+  &[data-status='completed'] {
+    background-color: #e3f2fd;
+    color: #1565c0;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: var(--mat-table-row-item-label-text-color);
+  opacity: 0.6;
+}

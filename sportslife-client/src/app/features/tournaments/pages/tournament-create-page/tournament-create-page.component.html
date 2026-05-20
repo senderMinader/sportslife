@@ -1,0 +1,39 @@
+<section class="page">
+      <header class="page-header">
+        <div>
+          <h1>Nouveau tournoi</h1>
+          <p>Créer un tournoi en brouillon</p>
+        </div>
+
+        <a routerLink="/tournaments">Retour à la liste</a>
+      </header>
+
+      <div class="card">
+        <form [formGroup]="form" (ngSubmit)="submit()">
+          <label>
+            Nom
+            <input type="text" formControlName="name" />
+          </label>
+
+          <label>
+            Description
+            <textarea rows="4" formControlName="description"></textarea>
+          </label>
+
+          <label>
+            Type
+            <select formControlName="type">
+              <option value="single_elimination">Single elimination</option>
+            </select>
+          </label>
+
+          <button type="submit" [disabled]="form.invalid || loading()">
+            {{ loading() ? 'Création...' : 'Créer le tournoi' }}
+          </button>
+        </form>
+
+        @if (error()) {
+          <p class="error">{{ error() }}</p>
+        }
+      </div>
+    </section>

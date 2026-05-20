@@ -1,0 +1,41 @@
+.page {
+        padding: 24px;
+      }
+
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .card {
+        max-width: 640px;
+        padding: 20px;
+        border: 1px solid #d0d5dd;
+        border-radius: 12px;
+        background: white;
+      }
+
+      form {
+        display: grid;
+        gap: 16px;
+      }
+
+      label {
+        display: grid;
+        gap: 8px;
+      }
+
+      input,
+      textarea,
+      select,
+      button {
+        padding: 10px 12px;
+      }
+
+      .error {
+        color: #b42318;
+        margin-top: 16px;
+      }

@@ -1,0 +1,48 @@
+<section class="landing-page">
+      <section class="hero">
+        <div class="hero-copy">
+          <span class="hero-tag">Gestion des tournois, visualisation des résultats, scores en direct</span>
+          <h1>
+            Organisez, suivez et maîtrisez
+            <span>vos tournois en toute simplicité</span>
+          </h1>
+          <p>
+            Parcourez les tournois disponibles, analysez les brackets et suivez chaque match en temps réel.
+            Accédez aux fonctionnalités d’administration en vous connectant.
+          </p>
+
+          <div class="hero-actions">
+            <a routerLink="/tournaments" class="btn-primary">Explorer les tournois</a>
+            @if (!authService.isAuthenticated()) {
+              <a routerLink="/login" class="btn-secondary">Accès admin</a>
+            } @else {
+              <a routerLink="/tournaments/create" class="btn-secondary">Nouveau tournoi</a>
+            }
+          </div>
+        </div>
+      </section>
+
+      <section class="section-head">
+        <div>
+          <h2>Tournois</h2>
+          <p>Les tournois disponibles actuellement.</p>
+        </div>
+      </section>
+
+      @if (loading()) {
+        <p>Chargement...</p>
+      }
+
+      @if (error()) {
+        <p class="error">{{ error() }}</p>
+      }
+
+      <app-tournament-table
+        [tournaments]="tournaments()"
+        [loading]="loading()"
+        [totalItems]="totalItems()"
+        [pageIndex]="pageIndex()"
+        [pageSize]="pageSize()"
+        (pageChange)="onPageChange($event)"
+      />
+    </section>

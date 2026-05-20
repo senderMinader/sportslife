@@ -1,0 +1,101 @@
+<section class="card bracket-shell">
+  <div class="bracket-head">
+    <div>
+      <span class="section-kicker">Table de visualisation</span>
+      <h2>Visualisation du tournoi</h2>
+      <p>Suivez la progression du tournoi round après round.</p>
+    </div>
+
+    @if (matches.length > 0) {
+      <div class="bracket-summary">
+        <span>{{ matches.length }} matchs</span>
+        <span>{{ matchesByRound.length }} rounds</span>
+      </div>
+    }
+  </div>
+
+  @if (matches.length === 0) {
+    <div class="empty-bracket">
+      <p>Aucun match généré pour le moment.</p>
+      <span>La table de visualisation apparaîtra ici après le lancement du tournoi.</span>
+    </div>
+  }
+
+  @if (matchesByRound.length > 0) {
+    <div class="bracket-board">
+      @for (round of matchesByRound; track round.round; let roundIndex = $index) {
+        <section class="round-column">
+          <header class="round-column__head">
+            <h3>{{ roundLabels[roundIndex].label }}</h3>
+            <span>{{ round.matches.length }} match{{ round.matches.length > 1 ? 's' : '' }}</span>
+          </header>
+
+          <div class="round-column__matches">
+            @for (match of round.matches; track match._id) {
+              <article
+                class="match-card"
+                [attr.data-status]="match.status"
+                [class.match-card--interactive]="canManageTournament && canEditMatch(match)"
+              >
+                <div class="match-card__top">
+                  <strong>Match {{ match.matchNumber }}</strong>
+                  <span class="status-chip" [attr.data-status]="match.status">
+                    {{ getStatusLabel(match.status) }}
+                  </span>
+                </div>
+
+                <div
+                  class="player-row"
+                  [class.player-row--winner]="match.winnerId?._id === match.participant1Id?._id"
+                >
+                  <div class="player-row__identity">
+                    <span class="player-dot"></span>
+                    <span>{{ match.participant1Id?.name || 'TBD' }}</span>
+                  </div>
+                  <strong>{{ match.score1 ?? '-' }}</strong>
+                </div>
+
+                <div
+                  class="player-row"
+                  [class.player-row--winner]="match.winnerId?._id === match.participant2Id?._id"
+                >
+                  <div class="player-row__identity">
+                    <span class="player-dot"></span>
+                    <span>{{ match.participant2Id?.name || 'TBD' }}</span>
+                  </div>
+                  <strong>{{ match.score2 ?? '-' }}</strong>
+                </div>
+
+                @if (match.winnerId) {
+                  <p class="winner-note">Gagnant: {{ match.winnerId.name }}</p>
+                }
+
+                @if (canManageTournament && canEditMatch(match)) {
+                  <form
+                    class="score-form"
+                    [formGroup]="getMatchForm(match._id)"
+                    (ngSubmit)="onUpdateResult(match._id)"
+                  >
+                    <input type="number" formControlName="score1" placeholder="P1" />
+                    <input type="number" formControlName="score2" placeholder="P2" />
+                    <button type="submit" class="btn-primary">Valider</button>
+                  </form>
+                }
+
+                @if (canManageTournament && canCancelMatch(match)) {
+                  <button
+                    type="button"
+                    class="btn-secondary match-card__cancel"
+                    (click)="onCancel(match._id)"
+                  >
+                    Annuler le match
+                  </button>
+                }
+              </article>
+            }
+          </div>
+        </section>
+      }
+    </div>
+  }
+</section>
